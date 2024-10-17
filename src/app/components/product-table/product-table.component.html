@@ -1,0 +1,35 @@
+<p>product-table works!</p>
+<h2 class="category-title">{{ categoryName }}</h2>
+<table class="product-table">
+  <thead>
+    <tr>
+      <th>nom</th>
+      <th>price</th>
+      <th>prix promo</th>
+      <th>discount</th>
+      <th>stock</th>
+      <th>vendu</th>
+      <th>comment</th>
+      <th>modifier quantite</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }} {{ product.unit }}</td>
+      <td>{{ product.sale ? product.discount.toFixed(2) : '-' }} {{ product.unit }}</td>
+      <td>{{ product.sale ? ((1 - product.discount / product.price) * 100).toFixed(2) : '0' }}%</td>
+      <td>{{ product.quantityInStock }}</td>
+      <td>-</td>
+      <td>{{ product.comments }}</td>
+      <td>
+        <input type="number" [(ngModel)]="product.quantityChange" (ngModelChange)="onQuantityChange(product)">
+      </td>
+      <td>
+        <button (click)="sendProductUpdate(product)">envoyer</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<button (click)="sendAllUpdates()">Tout envoyer</button>
