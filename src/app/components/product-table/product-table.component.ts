@@ -29,14 +29,20 @@ export class ProductTableComponent implements OnInit {
   }
 
   onQuantityChange(product: any) {
-    console.log('quantity change', product.quantityChange);
-    if (product.quantityChange < 0 && Math.abs(product.quantityChange) > product.quantityInStock) {
-      product.quantityChange = -product.quantityInStock;
-    }
+
   }
 
   sendProductUpdate(product: any) {
-    if (product.quantityChange === 0 || product.quantityChange === undefined) return
+    
+    if (product.quantityChange === 0 || product.quantityChange === undefined || (product.quantityChange<0 &&  product.quantityInStock < -product.quantityChange)) {
+      console.log("stock insuffisant pour ", product.name);
+      product.quantityChange = 0;
+      return;
+    }
+      
+    if (product.quantityChange < 0 && Math.abs(product.quantityChange) > product.quantityInStock) {
+      product.quantityChange = -product.quantityInStock;
+    }
     this.productService.updateProductStock(product.id, product.quantityChange).subscribe(
       response => {
         console.log('update success', response);
@@ -48,7 +54,7 @@ export class ProductTableComponent implements OnInit {
     );
   }
 
-  sendAllUpdates() {
+  sendAllProductsUpdates() {
     console.log("this.products");
     this.products.forEach(product => product!=undefined && this.sendProductUpdate(product));
 
