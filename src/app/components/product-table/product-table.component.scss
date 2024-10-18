@@ -8,37 +8,66 @@
   }
   
   .product-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-    font-size: 14px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-top: 30px;
     
-    th, td {
-      border: 1px solid #ddd;
-      padding: 3px;
-      text-align: left;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      
+      th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #2c3e50;
+        cursor: pointer; 
+      }
+      
+      tr:hover {
+        background-color: #e0f7fa; 
+      }
     }
     
-    th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-      text-transform: capitalize;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    
-    tr:hover {
-      background-color: #f5f5f5;
-    }
-    
-    td {
-      &:nth-child(2),
-      &:nth-child(3),
-      &:nth-child(4),
-      &:nth-child(5) {
-        text-align: right;
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      input {
+        width: 80px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        
+        &:hover {
+          background-color: #2980b9;
+        }
       }
     }
   }
+
+input.ng-invalid {
+  border-color: red; 
+}
+.error-message {
+  color: red;
+  font-size: 12px;
+}

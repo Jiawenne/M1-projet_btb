@@ -1,2 +1,29 @@
-<h1>Le Bateau de Thibault</h1>
-<app-product-list></app-product-list>
+<div class="container">
+  <header class="header">
+    <h1>Le Bateau de Thibault</h1>
+  </header>
+  
+  <section class="dashboard">
+    <div class="card">
+      <h2>total products</h2>
+      <div class="value">{{ totalProducts }}</div>
+    </div>
+    <div class="card">
+      <h2>promo products</h2>
+      <div class="value">{{ productsOnSale }}</div>
+    </div>
+    <div class="card">
+      <h2>total stock value</h2>
+      <div class="value">{{ totalStockValue | currency:'EUR' }}</div>
+    </div>
+  </section>
+  
+  <div class="table-selector">
+    <button (click)="selectTable('all')" [class.active]="selectedTable === 'all'">all products</button>
+    <button (click)="selectTable('poissons')" [class.active]="selectedTable === 'poissons'">poissons</button>
+    <button (click)="selectTable('crustaces')" [class.active]="selectedTable === 'coquillages'">coquillages</button>
+    <button (click)="selectTable('coquillages')" [class.active]="selectedTable === 'crustaces'">crustaces</button>
+  </div>
+  
+  <app-product-table [products]="getFilteredProducts()"></app-product-table>
+</div>

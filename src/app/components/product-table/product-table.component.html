@@ -11,6 +11,8 @@
       <th>vendu</th>
       <th>comment</th>
       <th>modifier quantite</th>
+      <th>modifier discount (%)</th>
+
     </tr>
   </thead>
   <tbody>
@@ -24,6 +26,9 @@
       <td>{{ product.comments }}</td>
       <td>
         <input type="number" [(ngModel)]="product.quantityChange" (ngModelChange)="onQuantityChange(product)">
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="product.discountChange" (ngModelChange)="onDiscountChange(product)">
       </td>
       <td>
         <button (click)="sendProductUpdate(product)">envoyer</button>

@@ -8,17 +8,19 @@ import { Product, ProductService } from '../../services/product.service';
   templateUrl: './product-table.component.html',
   styleUrls: ['./product-table.component.scss'],
   standalone: true,
-  imports: [CommonModule,FormsModule]
+  imports: [CommonModule, FormsModule]
 })
 export class ProductTableComponent implements OnInit {
   @Input() category!: number;
   @Input() categoryName!: string;
-  products: Product[] = [];
+  @Input() products: Product[] = [];
 
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.loadProducts();
+    if (!this.products.length) {
+      this.loadProducts();
+    }
   }
 
   loadProducts(): void {
@@ -30,6 +32,18 @@ export class ProductTableComponent implements OnInit {
   onQuantityChange(product: any) {
     if (product.quantityChange < 0 && Math.abs(product.quantityChange) > product.quantityInStock) {
       product.quantityChange = -product.quantityInStock;
+      product.error = 'insufficient stock';
+    } else {
+      product.error = null;
+    }
+  }
+
+  onDiscountChange(product: any) {
+    if (product.discountChange < 0 && Math.abs(product.discountChange) > product.discount) {
+      product.discountChange = -product.discount;
+      product.error = 'invalid discount';
+    } else {
+      product.error = null;
     }
   }
 
@@ -43,25 +57,23 @@ export class ProductTableComponent implements OnInit {
       },
       error => console.error('update failed', error)
     );
+
+    this.productService.updateProductDiscount(product.id, product.discountChange).subscribe(
+      response => {
+        console.log('update discount success', response);
+        product.discount += product.discountChange;
+        product.discountChange = 0;
+      },
+      error => console.error('update discount failed', error)
+    );
+
   }
 
   sendAllUpdates() {
-    const updates = this.products
-      .filter(p => p.quantityChange !== 0 && p.quantityChange !== undefined)
-      .map(p => ({ id: p.id, quantityChange: p.quantityChange as number }));
-
-    this.productService.updateMultipleProductStocks(updates).subscribe(
-      response => {
-        console.log('update all success', response);
-        
-        this.products.forEach(p => {
-          if (p.quantityChange !== undefined && p.quantityChange !== 0) {
-            p.quantityInStock += p.quantityChange;
-            p.quantityChange = 0;
-          }
-        });
-      },
-      error => console.error('update all failed', error)
-    );
+    this.products.forEach(product => {
+      if (product.quantityChange !== undefined && product.quantityChange !== 0) {
+        this.sendProductUpdate(product);
+      }
+    });
   }
 }

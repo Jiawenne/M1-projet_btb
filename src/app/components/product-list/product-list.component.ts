@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ProductTableComponent } from '../product-table/product-table.component';
 import { ProductService } from '../../services/product.service';
 
+interface Category {
+  id: number;
+  name: string;
+  products?: any[]; 
+}
+
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -11,7 +17,7 @@ import { ProductService } from '../../services/product.service';
   imports: [CommonModule, ProductTableComponent]
 })
 export class ProductListComponent implements OnInit {
-  categories = [
+  categories: Category[] = [
     { id: 0, name: 'poissons' },
     { id: 1, name: 'crustaces' },
     { id: 2, name: 'coquillages' },
@@ -25,7 +31,9 @@ export class ProductListComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts().subscribe({
       next: (products) => {
-        console.log('Products loaded:', products);
+        this.categories.forEach(category => {
+          category.products = products.filter(p => p.category === category.id);
+        });
         this.loading = false;
       },
       error: (err) => {

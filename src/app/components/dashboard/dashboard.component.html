@@ -1,0 +1,35 @@
+<div class="dashboard">
+  <h2>dashboard</h2>
+  
+  <div class="dashboard-cards">
+    <div class="card">
+      <h3>revenue</h3>
+      <p>{{ revenue | currency:'EUR' }}</p>
+    </div>
+    <div class="card">
+      <h3>profit</h3>
+      <p>{{ profit | currency:'EUR' }}</p>
+    </div>
+    <div class="card">
+      <h3>tax</h3>
+      <p>{{ tax | currency:'EUR' }}</p>
+    </div>
+  </div>
+
+  <div class="quarterly-profits">
+    <h3>quarterly profits</h3>
+    <ul>
+      <li *ngFor="let quarterProfit of quarterlyProfits; let i = index">
+        Q{{ i + 1 }}: {{ quarterProfit | currency:'EUR' }}
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="showAlert" class="alert">
+    alert
+  </div>
+
+  <div *ngIf="showCelebration" class="celebration">
+    congratulations!
+  </div>
+</div>
