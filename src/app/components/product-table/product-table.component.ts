@@ -27,6 +27,7 @@ export class ProductTableComponent implements OnInit {
     this.productService.getProductsByCategory(this.category).subscribe(
       products => this.products = products
     );
+    
   }
 
   onQuantityChange(product: any) {
@@ -38,6 +39,7 @@ export class ProductTableComponent implements OnInit {
     }
   }
 
+
   onDiscountChange(product: any) {
     if (product.discountChange < 0 && Math.abs(product.discountChange) > product.discount) {
       product.discountChange = -product.discount;
@@ -46,7 +48,6 @@ export class ProductTableComponent implements OnInit {
       product.error = null;
     }
   }
-
   sendProductUpdate(product: any) {
     this.productService.updateProductStock(product.id, product.quantityChange).subscribe(
       response => {
@@ -66,14 +67,18 @@ export class ProductTableComponent implements OnInit {
       },
       error => console.error('update discount failed', error)
     );
-
+    
   }
 
-  sendAllUpdates() {
-    this.products.forEach(product => {
-      if (product.quantityChange !== undefined && product.quantityChange !== 0) {
-        this.sendProductUpdate(product);
-      }
-    });
-  }
+  sendAllProductsUpdates() {
+    console.log("this.products");
+    this.products.forEach(product => product!=undefined && this.sendProductUpdate(product));
+
+    
+   
+
+
+    
+   
+  
 }
