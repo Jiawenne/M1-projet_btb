@@ -18,6 +18,13 @@ import { FormsModule } from '@angular/forms';
 export class ProductsTableComponent implements OnInit {
   displayedColumns: string[] = ['name', 'price', 'discount', 'quantityInStock', 'actions'];
   products: Product[] = [];
+  filteredProducts: Product[] = [];
+  selectedCategory: number | null = null; // La catégorie sélectionnée
+  categories = [
+    { id: 0, name: 'Poissons' },
+    { id: 1, name: 'Fruits de Mer' },
+    { id: 2, name: 'Crustacés' }
+  ];
   stockErrorMessages: { [key: number]: string } = {};
   discountErrorMessages: { [key: number]: string } = {};
 
@@ -30,9 +37,20 @@ export class ProductsTableComponent implements OnInit {
   // Méthode pour charger les produits depuis le service
   loadProducts(): void {
     this.productService.getProducts().subscribe({
-      next: (data) => this.products = data,
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = data; // Par défaut, on affiche tous les produits
+      },
       error: (err) => console.error('Erreur lors de la récupération des produits :', err)
     });
+  }
+
+  filterByCategory(): void {
+    if (this.selectedCategory !== null) {
+      this.filteredProducts = this.products.filter(product => product.category === this.selectedCategory);
+    } else {
+      this.filteredProducts = this.products; // Si aucune catégorie n'est sélectionnée, on affiche tous les produits
+    }
   }
 
   validateStockChange(quantityChange: number): boolean {
@@ -51,9 +69,8 @@ export class ProductsTableComponent implements OnInit {
       return;
     }
     const product = this.products.find(p => p.id === productId);
-    console.log(product?.quantityInStock,quantityChange);
+    console.log(product?.category);
 
-    console.log(product &&  product.quantityInStock+quantityChange < 0);
 
     if (product && product.quantityInStock+quantityChange < 0) {
       console.log(product.quantityInStock-quantityChange);
