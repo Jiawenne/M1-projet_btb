@@ -1,0 +1,87 @@
+<div>
+    <h1>Dashboard Chiffre d'Affaires</h1>
+  
+    <!-- Filtres par catégorie -->
+    <label for="category">Filtrer par catégorie:</label>
+    <select id="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)">
+      <option [ngValue]="null">Toutes les catégories</option>
+      <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+    </select>
+  
+    <!-- Filtres par période -->
+    <label for="timePeriod">Filtrer par période:</label>
+    <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="onTimePeriodChange($event)">
+      <option value="year">Annuel</option>
+      <option value="month">Mensuel</option>
+      <option value="week">Hebdomadaire</option>
+      <option value="day">Journalier</option>
+    </select>
+  
+    <!-- Affichage des métriques -->
+    <div>
+      <h2>Chiffre d'affaires : {{ totalRevenue | currency }}</h2>
+      <h2>Coûts : {{ totalCosts | currency }}</h2>
+      <h2>Marge : {{ margin | currency }}</h2>
+      <h2>Impôt : {{ tax | currency }}</h2>
+    </div>
+  
+    <table mat-table [dataSource]="filteredTransactions" class="mat-elevation-z8">
+
+    <!-- ID Transaction -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let transaction"> {{ transaction.id }} </td>
+    </ng-container>
+
+    <!-- Quantité -->
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef> Quantité </th>
+      <td mat-cell *matCellDef="let transaction"> {{ transaction.quantity }} </td>
+    </ng-container>
+
+    <!-- Prix -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Prix </th>
+      <td mat-cell *matCellDef="let transaction"> {{ transaction.price | currency }} </td>
+    </ng-container>
+
+    <!-- Date -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let transaction"> {{ transaction.date | date:'short' }} </td>
+    </ng-container>
+
+    <!-- Type de vente (sale_type) -->
+    <ng-container matColumnDef="sale_type">
+      <th mat-header-cell *matHeaderCellDef> Type de Vente </th>
+      <td mat-cell *matCellDef="let transaction"> {{ transaction.sale_type }} </td>
+    </ng-container>
+
+    <!-- Catégorie de produit -->
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef> Catégorie </th>
+      <td mat-cell *matCellDef="let transaction"> 
+        <ng-container *ngIf="transaction.product.category === 0">Poisson</ng-container>
+        <ng-container *ngIf="transaction.product.category === 1">Fruits de Mer</ng-container>
+        <ng-container *ngIf="transaction.product.category === 2">Crustacés</ng-container>
+      </td>
+    </ng-container>
+
+    <!-- Promotion du produit -->
+    <ng-container matColumnDef="sale">
+      <th mat-header-cell *matHeaderCellDef> Promotion </th>
+      <td mat-cell *matCellDef="let transaction"> 
+        <span *ngIf="transaction.product.sale">Oui</span>
+        <span *ngIf="!transaction.product.sale">Non</span>
+      </td>
+    </ng-container>
+
+    <!-- Déclaration des colonnes -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+   
+</div>
+
+  
+  

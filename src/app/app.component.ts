@@ -5,10 +5,11 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductService } from './services/product.service';
 import { ProductTableComponent } from './components/product-table/product-table.component';
 import { ProductsTableComponent } from "./products-table/products-table.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe, ProductsTableComponent],
+  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe, ProductsTableComponent, DashboardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

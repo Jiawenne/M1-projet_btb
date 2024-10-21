@@ -3,6 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
+export interface Transaction {
+  id: number;
+  quantity: number;
+  price: number;
+  date: string;
+  sale_type: string;
+  product: { category: number, price: number, sale: boolean }; // assuming 'product' has category and price
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -77,4 +86,11 @@ export class ProductService {
   getCategories(): Observable<{ id: number; name: string }[]> {
     return this.http.get<{ id: number; name: string }[]>('categories');
   }
+
+  getTransactions(): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(this.localUrl+"transactions/").pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }
