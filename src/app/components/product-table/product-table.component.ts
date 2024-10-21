@@ -49,31 +49,34 @@ export class ProductTableComponent implements OnInit {
     }
   }
   sendProductUpdate(product: any) {
-    this.productService.updateProductStock(product.id, product.quantityChange).subscribe(
-      response => {
-        console.log('update success', response);
+    if (product.quantityChange !== 0 && !isNaN(product.quantityChange)) {
+      this.productService.updateProductStock(product.id, product.quantityChange).subscribe(
+        response => {
+          console.log('update success', response);
 
-        product.quantityInStock += product.quantityChange;
-        product.quantityChange = 0;
-      },
-      error => console.error('update failed', error)
-    );
-
-    this.productService.updateProductDiscount(product.id, product.discountChange).subscribe(
-      response => {
-        console.log('update discount success', response);
-        product.discount += product.discountChange;
-        product.discountChange = 0;
-      },
-      error => console.error('update discount failed', error)
-    );
-    
+          product.quantityInStock += product.quantityChange;
+          product.quantityChange = 0;
+        },
+        error => console.error('update failed', error)
+      );
+    }
+    if (product.discountChange !== 0 && !isNaN(product.discountChange)) {
+      this.productService.updateProductDiscount(product.id, product.discountChange).subscribe(
+        response => {
+          console.log('update discount success', response);
+          product.discount_price = response.discount_price;
+          product.discount = response.discount; 
+          product.discountChange = 0;
+        },
+        error => console.error('update discount failed', error)
+      );
+    }
   }
 
   sendAllProductsUpdates() {
     console.log("this.products");
     this.products.forEach(product => product!=undefined && this.sendProductUpdate(product));
-
+  }
     
    
 
@@ -81,4 +84,5 @@ export class ProductTableComponent implements OnInit {
     
    
   
+
 }

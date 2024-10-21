@@ -1,35 +1,34 @@
-<div class="dashboard">
-  <h2>dashboard</h2>
+<section class="dashboard">
+    <div class="card">
+      <h2>total products</h2>
+      <div class="value">{{ totalProducts }}</div>
+    </div>
+    <div class="card">
+      <h2>promo products</h2>
+      <div class="value">{{ productsOnSale }}</div>
+    </div>
+    <div class="card">
+      <h2>total stock value</h2>
+      <div class="value">{{ totalStockValue | currency:'EUR' }}</div>
+    </div>
+  </section>
   
-  <div class="dashboard-cards">
-    <div class="card">
-      <h3>revenue</h3>
-      <p>{{ revenue | currency:'EUR' }}</p>
-    </div>
-    <div class="card">
-      <h3>profit</h3>
-      <p>{{ profit | currency:'EUR' }}</p>
-    </div>
-    <div class="card">
-      <h3>tax</h3>
-      <p>{{ tax | currency:'EUR' }}</p>
-    </div>
+  <div class="table-selector">
+    <button (click)="selectTable('all')" [class.active]="selectedTable === 'all'">all products</button>
+    <button (click)="selectTable('poissons')" [class.active]="selectedTable === 'poissons'">poissons</button>
+    <button (click)="selectTable('coquillages')" [class.active]="selectedTable === 'coquillages'">coquillages</button>
+    <button (click)="selectTable('crustaces')" [class.active]="selectedTable === 'crustaces'">crustaces</button>
   </div>
-
-  <div class="quarterly-profits">
-    <h3>quarterly profits</h3>
-    <ul>
-      <li *ngFor="let quarterProfit of quarterlyProfits; let i = index">
-        Q{{ i + 1 }}: {{ quarterProfit | currency:'EUR' }}
-      </li>
-    </ul>
+  
+  <app-product-table [products]="getFilteredProducts()"></app-product-table>
+  
+  <!-- 添加销售报告部分 -->
+  <h2>Sales Dashboard</h2>
+  
+  <div class="filters">
+    <!-- 保留原有的过滤器 -->
   </div>
-
-  <div *ngIf="showAlert" class="alert">
-    alert
-  </div>
-
-  <div *ngIf="showCelebration" class="celebration">
-    congratulations!
-  </div>
-</div>
+  
+  <table>
+    <!-- 保留原有的销售数据表格 -->
+  </table>

@@ -1,56 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProductService } from '../../services/product.service';
+import { SalesReportService } from '../../sales-reports.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  standalone: true,
-  imports: [CommonModule]
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  revenue: number = 0;
-  profit: number = 0;
-  tax: number = 0;
-  quarterlyProfits: number[] = [];
-  showAlert: boolean = false;
-  showCelebration: boolean = false;
+  salesData: any[] = [];
+  timePeriod = 'month';
+  category = '';
+  promotionType = '';
+  totalProducts: number = 0;
+  productsOnSale: number = 0;
+  totalStockValue: number = 0;
+  selectedTable: string = 'all';
 
-  constructor(private productService: ProductService) {}
+  constructor(private salesReportService: SalesReportService) { }
 
   ngOnInit() {
-    this.loadDashboardData();
-    setInterval(() => this.loadDashboardData(), 60000);
+    this.loadSalesData();
+    this.loadProductData();
+    setInterval(() => this.loadSalesData(), 60000);
+    console.log('Dashboard initialized');
   }
 
-  loadDashboardData() {
-    this.productService.getDashboardData().subscribe(
-      data => {
-        this.revenue = data.revenue;
-        this.profit = data.profit;
-        this.tax = data.tax;
-        this.quarterlyProfits = data.quarterlyProfits;
-        this.checkAlerts();
-      },
-      error => console.error('dashboard data failed to load', error)
-    );
+  loadSalesData() {
+    this.salesReportService.getSalesReport(this.timePeriod, this.category, this.promotionType)
+      .subscribe(data => {
+        this.salesData = data;
+      });
   }
 
-  checkAlerts() {
-    const currentQuarterProfit = this.quarterlyProfits[this.quarterlyProfits.length - 1];
-    if (currentQuarterProfit < 0) {
-      this.showAlert = true;
-    } else {
-      this.showAlert = false;
-    }
+  loadProductData() {
+    // 实现加载产品数据的逻辑
+  }
 
-    const lastSixQuarters = this.quarterlyProfits.slice(-7, -1);
-    const averageProfit = lastSixQuarters.reduce((a, b) => a + b, 0) / lastSixQuarters.length;
-    if (currentQuarterProfit > averageProfit * 2) {
-      this.showCelebration = true;
-    } else {
-      this.showCelebration = false;
-    }
+  onFilterChange() {
+    this.loadSalesData();
+  }
+
+  selectTable(table: string) {
+    this.selectedTable = table;
+  }
+
+  getFilteredProducts() {
+    // 实现过滤产品的逻辑
+    return [];
   }
 }

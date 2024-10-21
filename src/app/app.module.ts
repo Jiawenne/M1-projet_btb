@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { provideHttpClient } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductTableComponent } from './components/product-table/product-table.component';
@@ -20,6 +21,7 @@ import { ProductTableComponent } from './components/product-table/product-table.
     ProductTableComponent,
     ProductListComponent,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule
   ],
   exports: [ProductTableComponent],

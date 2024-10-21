@@ -12,6 +12,7 @@ export interface Product {
   availability: boolean;
   sale: boolean;
   discount: number;
+  discount_price: number;
   comments: string;
   owner: string;
   quantityInStock: number;
@@ -31,6 +32,22 @@ export class ProductService {
   }
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl).pipe(
+      map(data => data.map(item => ({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        price: item.price,
+        unit: item.unit,
+        availability: item.availability,
+        sale: item.sale,
+        discount: item.discount,
+        discount_price: item.discount_price,
+        comments: item.comments,
+        owner: item.owner,
+        quantityInStock: item.quantityInStock,
+        quantityChange: undefined,
+        discountChange: undefined
+      }))),
       catchError(this.handleError)
     );
   }
@@ -58,9 +75,10 @@ export class ProductService {
   updateProductDiscount(productId: number, discountChange: number): Observable<any> {
     const endpoint = discountChange > 0 ? 'incrementDiscount' : 'decrementDiscount';
     const absChange = Math.abs(discountChange);
-    
+    console.log(`Sending discount update: ${endpoint}/${productId}/${absChange}`);
     return this.http.put(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
-      catchError(this.handleError));
+      catchError(this.handleError)
+    );
   }
   
   //problem

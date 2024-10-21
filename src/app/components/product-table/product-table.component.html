@@ -19,8 +19,8 @@
     <tr *ngFor="let product of products">
       <td>{{ product.name }}</td>
       <td>{{ product.price }} {{ product.unit }}</td>
-      <td>{{ product.sale ? product.discount.toFixed(2) : '-' }} {{ product.unit }}</td>
-      <td>{{ product.sale ? ((1 - product.discount / product.price) * 100).toFixed(2) : '0' }}%</td>
+      <td>{{ product.sale ? product.discount_price.toFixed(2) : '-' }} {{ "/"+product.unit }}</td>
+      <td>{{ product.sale ? product.discount : '0' }}%</td>
       <td>{{ product.quantityInStock }}</td>
       <td>-</td>
       <td>{{ product.comments }}</td>
