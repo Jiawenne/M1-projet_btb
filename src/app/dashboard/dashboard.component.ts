@@ -3,6 +3,7 @@ import { ProductService, Transaction } from '../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,10 +33,14 @@ export class DashboardComponent implements OnInit {
   ];
   displayedColumns: string[] = ['name', 'price', 'discount', 'quantityInStock', 'actions'];
 
+  previousMargins: number[] = []; 
+  isExceptionalMargin: boolean = false;
+
   constructor(private transactionService: ProductService) { }
 
   ngOnInit(): void {
     this.fetchTransactions();
+    this.previousMargins = [10, 12, 8, 15, 11, 9];    // pour tester    faut preciser 
   }
 
   fetchTransactions(): void {
@@ -100,6 +105,26 @@ export class DashboardComponent implements OnInit {
     if (this.margin > 0) {
       this.tax = this.margin * 0.30;  // 30% d'impôt sur les bénéfices
     }
+
+    this.checkExceptionalMargin();
+  }
+
+  checkExceptionalMargin(): void {
+    if (this.previousMargins.length >= 6) {
+      const averagePreviousMargin = this.previousMargins.slice(-6).reduce((sum, margin) => sum + margin, 0) / 6;
+      this.isExceptionalMargin = this.margin >= averagePreviousMargin * 2;
+      if (this.isExceptionalMargin) {
+        this.launchConfetti();
+      }
+    }
+  }
+
+  launchConfetti(): void {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
   }
 
   onCategoryChange(event: Event): void {

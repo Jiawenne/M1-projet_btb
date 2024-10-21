@@ -17,6 +17,21 @@
       <option value="day">Journalier</option>
     </select>
   
+    <!-- alert de finacial status -->
+    <div class="financial-status">
+      <div *ngIf="margin < 0" class="alert alert-negative">
+        Alert: Current quarter profit is negative!
+      </div>
+      
+      <div *ngIf="margin > 0 && !isExceptionalMargin" class="alert alert-positive">
+        Relax: Current quarter has profit.
+      </div>
+      
+      <div *ngIf="isExceptionalMargin" class="alert alert-celebration">
+        Celebration: Current quarter profit is excellent!
+      </div>
+    </div>
+
     <!-- Affichage des métriques -->
     <div>
       <h2>Chiffre d'affaires : {{ totalRevenue | currency }}</h2>
@@ -83,5 +98,4 @@
    
 </div>
 
-  
   

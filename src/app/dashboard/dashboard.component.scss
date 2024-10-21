@@ -1,0 +1,25 @@
+.financial-status {
+    margin-bottom: 20px;
+  }
+  
+  .alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .alert-negative {
+    background-color: #ffcccc;
+    color: #cc0000;
+  }
+  
+  .alert-positive {
+    background-color: #ccffcc;
+    color: #006600;
+  }
+  
+  .alert-celebration {
+    background-color: #fffacd;
+    color: #ffa500;
+    font-weight: bold;
+  }
