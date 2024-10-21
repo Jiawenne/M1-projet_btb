@@ -49,7 +49,7 @@ export class ProductTableComponent implements OnInit {
     }
   }
   sendProductUpdate(product: any) {
-    this.productService.updateProductStock(product.id, product.quantityChange).subscribe(
+    this.productService.updateProductStock(product.id,product.selectedSaleType, product.quantityChange).subscribe(
       response => {
         console.log('update success', response);
 

@@ -17,6 +17,7 @@ export interface Product {
   quantityInStock: number;
   quantityChange?: number;
   discountChange?: number;
+  selectedSaleType?: number;
 }
 
 @Injectable({
@@ -47,13 +48,21 @@ export class ProductService {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
-  updateProductStock(productId: number, quantityChange: number): Observable<any> {
-    const endpoint = quantityChange > 0 ? 'incrementStock' : 'decrementStock';
-    const absChange = Math.abs(quantityChange);
-    console.log(`${this.localUrl}${endpoint}/${productId}/${absChange}/`);
+  // updateProductStock(productId: number, quantityChange: number): Observable<any> {
+  //   const endpoint = quantityChange > 0 ? 'incrementStock' : 'decrementStock';
+  //   const absChange = Math.abs(quantityChange);
+  //   console.log(`${this.localUrl}${endpoint}/${productId}/${absChange}/`);
 
-    return this.http.get(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
-      catchError(this.handleError));
+  //   return this.http.get(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
+  //     catchError(this.handleError));
+  // }
+  updateProductStock(productId: number, saleType: string, quantityChange: number): Observable<any> {
+    const absChange = Math.abs(quantityChange);
+    const endpoint = `${this.localUrl}transaction/${productId}/${saleType}/${absChange}/`;
+
+    return this.http.get(endpoint).pipe(
+      catchError(this.handleError)
+    );
   }
 
   updateProductDiscount(productId: number, discountChange: number): Observable<any> {

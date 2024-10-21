@@ -25,6 +25,12 @@ export class ProductsTableComponent implements OnInit {
     { id: 1, name: 'Fruits de Mer' },
     { id: 2, name: 'Crustacés' }
   ];
+  selectedSaleType: string = "purchase"; // La catégorie sélectionnée
+  saleTypes = [
+    { id: 'purchase', name: 'ajout' },
+    { id: 'sale', name: 'retrait-par-vente'},
+    { id: 'unsold', name: 'retrait-par-invendus' }
+  ];
   stockErrorMessages: { [key: number]: string } = {};
   discountErrorMessages: { [key: number]: string } = {};
 
@@ -39,7 +45,8 @@ export class ProductsTableComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: (data) => {
         this.products = data;
-        this.filteredProducts = data; // Par défaut, on affiche tous les produits
+        this.filteredProducts = data;
+
       },
       error: (err) => console.error('Erreur lors de la récupération des produits :', err)
     });
@@ -54,7 +61,7 @@ export class ProductsTableComponent implements OnInit {
   }
 
   validateStockChange(quantityChange: number): boolean {
-    return quantityChange !== undefined && !isNaN(quantityChange) ;
+    return quantityChange !== undefined && !isNaN(quantityChange) && quantityChange > 0;
   }
 
   // Méthode pour valider le discount avant mise à jour
@@ -63,12 +70,16 @@ export class ProductsTableComponent implements OnInit {
   }
 
   // Méthode pour modifier le stock d'un produit et mettre à jour le tableau localement
-  updateStock(productId: number, quantityChange: number): void {
+  updateStock(productId: number, quantityChange: number, selectedSaleType: string): void {
     if (!this.validateStockChange(quantityChange)) {
-      this.stockErrorMessages[productId] = 'Veuillez saisir une valeur numérique';
+      this.stockErrorMessages[productId] = 'Veuillez saisir une valeur numérique positive';
       return;
     }
     const product = this.products.find(p => p.id === productId);
+    if(product?.selectedSaleType === undefined){
+      this.stockErrorMessages[productId] = 'Veuillez selectionner un type de transaction';
+      return;
+    }
     console.log(product?.category);
 
 
@@ -80,17 +91,24 @@ export class ProductsTableComponent implements OnInit {
     }
 
 
-    this.productService.updateProductStock(productId, quantityChange).subscribe({
+    this.productService.updateProductStock(productId, selectedSaleType, quantityChange).subscribe({
       next: () => {
-
         if (product) {
-          product.quantityInStock += quantityChange;
-          product.quantityChange = undefined;
+          if(selectedSaleType === 'purchase'){
+            product.quantityInStock += quantityChange;
+          }
+          else {
+            product.quantityInStock -= quantityChange;
+          }
+          product.quantityChange = undefined; // Réinitialise la quantité de changement
         }
         console.log(`Stock mis à jour pour le produit ID: ${productId}`);
         this.stockErrorMessages[productId] = '';
       },
-      error: (err) => console.error('Erreur lors de la mise à jour du stock :', err)
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour du stock :', err);
+        this.stockErrorMessages[productId] = 'Erreur lors de la mise à jour du stock.';
+      }
     });
   }
 
@@ -118,7 +136,7 @@ export class ProductsTableComponent implements OnInit {
     this.products.forEach(product => {
       // Vérifie si le stock ou la promotion ont été modifiés
       if (product.quantityChange !== undefined && product.quantityChange !== 0) {
-        this.updateStock(product.id, product.quantityChange);
+        this.updateStock(product.id,  product.quantityChange,this.selectedSaleType );
       }
       if (product.discountChange !== undefined && product.discountChange !== product.discount) {
         this.updateDiscount(product.id, product.discountChange);

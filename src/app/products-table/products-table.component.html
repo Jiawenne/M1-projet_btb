@@ -44,15 +44,28 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let product">
+      <!-- Modifier le stock -->
       <input [(ngModel)]="product.quantityChange" type="number" placeholder="Entrer quantité">
-      <button (click)="updateStock(product.id, product.quantityChange)">Envoyer Stock</button>
+
+      <!-- Sélectionner le type de modification du stock -->
+      <select [(ngModel)]="product.selectedSaleType">
+        <option *ngFor="let saleType of saleTypes" [ngValue]="saleType.id">{{ saleType.name }}</option>
+      </select>
+
+      <!-- Bouton pour envoyer la mise à jour du stock -->
+      <button (click)="updateStock(product.id, product.quantityChange, product.selectedSaleType)">Envoyer Stock</button>
+
+
       <div *ngIf="stockErrorMessages[product.id]" class="error-message">{{stockErrorMessages[product.id]}}</div>
       <br>
+
+      <!-- Modifier la promotion -->
       <input [(ngModel)]="product.discountChange" type="number" placeholder="Entrer promotion">
       <button (click)="updateDiscount(product.id, product.discountChange)">Envoyer Promo</button>
       <div *ngIf="discountErrorMessages[product.id]" class="error-message">{{discountErrorMessages[product.id]}}</div>
     </td>
   </ng-container>
+
 
   <!-- Header et rows -->
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
