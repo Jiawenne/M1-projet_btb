@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchTransactions();
-    this.previousMargins = [10, 12, 8, 15, 11, 9];    // pour tester    faut preciser 
+    this.previousMargins = [100000, 120000, 80000, 150000, 110000, 90000];    // pour tester    faut preciser les montants
   }
 
   fetchTransactions(): void {

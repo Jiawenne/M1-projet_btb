@@ -1,6 +1,6 @@
 <nav>
-  <button (click)="showDashboard()">dashboard</button>
-  <button (click)="showProductsTable()">products</button>
+  <button (click)="showDashboard()" [ngClass]="{'active-button': currentView === 'dashboard'}">Dashboard</button>
+  <button (click)="showProductsTable()" [ngClass]="{'active-button': currentView === 'products'}">Products</button>
 </nav>
 
 <app-dashboard *ngIf="currentView === 'dashboard'"></app-dashboard>
