@@ -16,13 +16,13 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./products-table.component.scss']
 })
 export class ProductsTableComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'price', 'discount', 'quantityInStock', 'actions'];
+  displayedColumns: string[] = ['name', 'price','discount_price','discount', 'quantityInStock', 'actions','comments'];
   products: Product[] = [];
   filteredProducts: Product[] = [];
   selectedCategory: number | null = null; // La catégorie sélectionnée
   categories = [
     { id: 0, name: 'Poissons' },
-    { id: 1, name: 'Fruits de Mer' },
+    { id: 1, name: 'Coquillages' },
     { id: 2, name: 'Crustacés' }
   ];
   selectedSaleType: string = "purchase"; // La catégorie sélectionnée
@@ -125,6 +125,7 @@ export class ProductsTableComponent implements OnInit {
         if (product) {
           product.discount = discountChange;
           product.discountChange = undefined;
+          product.discount_price = product.price * (1-product.discount/100);
         }
         console.log(`Promotion mise à jour pour le produit ID: ${productId}`);
         this.discountErrorMessages[productId] = '';

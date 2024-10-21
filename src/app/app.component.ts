@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductService } from './services/product.service';
 import { ProductTableComponent } from './components/product-table/product-table.component';
@@ -9,7 +10,7 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe, ProductsTableComponent, DashboardComponent],
+  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe, ProductsTableComponent, DashboardComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -20,7 +21,15 @@ export class AppComponent implements OnInit {
   selectedTable: string = 'all';
   allProducts: any[] = [];
   categories: { id: number; name: string }[] = [];
+  currentView: 'dashboard' | 'products' = 'products';
 
+  showDashboard() {
+    this.currentView = 'dashboard';
+  }
+
+  showProductsTable() {
+    this.currentView = 'products';
+  }
   constructor(private productService: ProductService) {}
 
   ngOnInit() {

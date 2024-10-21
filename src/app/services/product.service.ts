@@ -17,6 +17,7 @@ export interface Product {
   name: string;
   category: number;
   price: number;
+  discount_price: number;
   unit: string;
   availability: boolean;
   sale: boolean;

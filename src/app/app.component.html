@@ -1,4 +1,7 @@
+<nav>
+  <button (click)="showDashboard()">dashboard</button>
+  <button (click)="showProductsTable()">products</button>
+</nav>
 
-  <app-products-table></app-products-table>
-<app-dashboard></app-dashboard>
-<router-outlet></router-outlet>
+<app-dashboard *ngIf="currentView === 'dashboard'"></app-dashboard>
+<app-products-table *ngIf="currentView === 'products'"></app-products-table>

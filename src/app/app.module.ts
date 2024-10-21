@@ -3,26 +3,28 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { provideHttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductTableComponent } from './components/product-table/product-table.component';
+import { ProductsTableComponent } from './products-table/products-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     ProductListComponent,
-    ProductTableComponent
+    ProductsTableComponent
   ],
   imports: [
     BrowserModule,
-    ProductTableComponent,
+    ProductsTableComponent,
     ProductListComponent,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule
   ],
-  exports: [ProductTableComponent],
+  exports: [ProductsTableComponent],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
