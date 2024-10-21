@@ -97,4 +97,15 @@ export class ProductsTableComponent implements OnInit {
       error: (err) => console.error('Erreur lors de la mise à jour de la promotion :', err)
     });
   }
+  submitAll(): void {
+    this.products.forEach(product => {
+      // Vérifie si le stock ou la promotion ont été modifiés
+      if (product.quantityChange !== undefined && product.quantityChange !== 0) {
+        this.updateStock(product.id, product.quantityChange);
+      }
+      if (product.discountChange !== undefined && product.discountChange !== product.discount) {
+        this.updateDiscount(product.id, product.discountChange);
+      }
+    });
+  }
 }
