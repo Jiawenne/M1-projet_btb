@@ -4,11 +4,11 @@ import { CurrencyPipe } from '@angular/common';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductService } from './services/product.service';
 import { ProductTableComponent } from './components/product-table/product-table.component';
-
+import { ProductsTableComponent } from "./products-table/products-table.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe],
+  imports: [RouterOutlet, ProductListComponent, ProductTableComponent, CurrencyPipe, ProductsTableComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,40 +23,40 @@ export class AppComponent implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
-    this.loadProducts();
-    this.loadCategories();
+    // this.loadProducts();
+    // this.loadCategories();
   }
 
-  loadProducts() {
-    this.productService.getProducts().subscribe(products => {
-      this.allProducts = products;
-      this.calculateDashboardData();
-    });
-  }
+  // loadProducts() {
+  //   this.productService.getProducts().subscribe(products => {
+  //     this.allProducts = products;
+  //     this.calculateDashboardData();
+  //   });
+  // }
 
-  loadCategories() {
-    this.productService.getCategories().subscribe(categories => {
-      this.categories = categories;
-    });
-  }
+  // loadCategories() {
+  //   this.productService.getCategories().subscribe(categories => {
+  //     this.categories = categories;
+  //   });
+  // }
 
-  calculateDashboardData() {
-    this.totalProducts = this.allProducts.length;
-    this.productsOnSale = this.allProducts.filter(p => p.discount > 0).length;
-    this.totalStockValue = this.allProducts.reduce((total, p) => total + (p.price * p.stock), 0);
-  }
+  // calculateDashboardData() {
+  //   this.totalProducts = this.allProducts.length;
+  //   this.productsOnSale = this.allProducts.filter(p => p.discount > 0).length;
+  //   this.totalStockValue = this.allProducts.reduce((total, p) => total + (p.price * p.stock), 0);
+  // }
 
-  selectTable(table: string) {
-    this.selectedTable = table;
-    console.log('selected table：', this.selectedTable); 
-  }
+  // selectTable(table: string) {
+  //   this.selectedTable = table;
+  //   console.log('selected table：', this.selectedTable);
+  // }
 
-  getFilteredProducts() {
-    console.log('nombre de produits avant：', this.allProducts.length); 
-    if (this.selectedTable === 'all') {
-      return this.allProducts;
-    }
-    const categoryId = this.categories.find(c => c.name === this.selectedTable)?.id;
-    return this.allProducts.filter(p => p.category === categoryId);
-  }
+  // getFilteredProducts() {
+  //   console.log('nombre de produits avant：', this.allProducts.length);
+  //   if (this.selectedTable === 'all') {
+  //     return this.allProducts;
+  //   }
+  //   const categoryId = this.categories.find(c => c.name === this.selectedTable)?.id;
+  //   return this.allProducts.filter(p => p.category === categoryId);
+  // }
 }

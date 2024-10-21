@@ -1,0 +1,10 @@
+/* Colorer les champs en rouge s'ils sont invalides */
+.error-input {
+  border: 1px solid red;
+}
+
+/* Style pour les messages d'erreur */
+.error-message {
+  color: red;
+  font-size: 12px;
+}

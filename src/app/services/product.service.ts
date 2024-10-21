@@ -16,7 +16,7 @@ export interface Product {
   owner: string;
   quantityInStock: number;
   quantityChange?: number;
-  discountChange?: number; 
+  discountChange?: number;
 }
 
 @Injectable({
@@ -50,19 +50,20 @@ export class ProductService {
   updateProductStock(productId: number, quantityChange: number): Observable<any> {
     const endpoint = quantityChange > 0 ? 'incrementStock' : 'decrementStock';
     const absChange = Math.abs(quantityChange);
-    
-    return this.http.put(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
+    console.log(`${this.localUrl}${endpoint}/${productId}/${absChange}/`);
+
+    return this.http.get(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
       catchError(this.handleError));
   }
 
   updateProductDiscount(productId: number, discountChange: number): Observable<any> {
     const endpoint = discountChange > 0 ? 'incrementDiscount' : 'decrementDiscount';
     const absChange = Math.abs(discountChange);
-    
-    return this.http.put(`${this.localUrl}${endpoint}/${productId}/${absChange}/`, {}).pipe(
+
+    return this.http.get(`${this.localUrl}/putonsale/${productId}/${absChange}/`, {}).pipe(
       catchError(this.handleError));
   }
-  
+
   //problem
   getCategories(): Observable<{ id: number; name: string }[]> {
     return this.http.get<{ id: number; name: string }[]>('categories');

@@ -27,7 +27,7 @@ export class ProductTableComponent implements OnInit {
     this.productService.getProductsByCategory(this.category).subscribe(
       products => this.products = products
     );
-    
+
   }
 
   onQuantityChange(product: any) {
@@ -67,18 +67,18 @@ export class ProductTableComponent implements OnInit {
       },
       error => console.error('update discount failed', error)
     );
-    
+
   }
 
   sendAllProductsUpdates() {
     console.log("this.products");
     this.products.forEach(product => product!=undefined && this.sendProductUpdate(product));
 
-    
-   
 
 
-    
-   
-  
+
+
+
+  }
+
 }
