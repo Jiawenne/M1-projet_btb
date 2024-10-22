@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService, Transaction } from '../services/product.service';
-import { FormsModule } from '@angular/forms';
+import { ProductService, Transaction,Product } from '../services/product.service';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
 import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule, MatTableModule, CommonModule],
+  imports: [FormsModule, MatTableModule, CommonModule,ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -23,24 +24,31 @@ export class DashboardComponent implements OnInit {
   tax: number = 0;
 
   // Filters
-  selectedCategory: number | null = null; // Filtrer par catégorie
+  // selectedCategory: number | null = null; // Filtrer par catégorie
   selectedTimePeriod: string = 'year'; // 'year', 'month', 'week', 'day'
 
   categories = [
     { id: 0, name: 'Poisson' },
     { id: 1, name: 'Fruits de Mer' },
-    { id: 2, name: 'Crustacés' }
+    { id: 2, name: 'Crustacés' },
+    { id: 3, name: 'Touts les produits' }
+
   ];
   displayedColumns: string[] = ['name', 'price', 'discount', 'quantityInStock', 'actions'];
-
+  productsCache: { [key: number]: Product } = {};
+  contactForm: any;
+  selectedCategory = 3;
+  
   previousMargins: number[] = []; 
   isExceptionalMargin: boolean = false;
-
+  
   constructor(private transactionService: ProductService) { }
 
   ngOnInit(): void {
     this.fetchTransactions();
-    this.previousMargins = [100000, 120000, 80000, 150000, 110000, 90000];    // pour tester    faut preciser les montants
+    this.contactForm = new FormGroup({
+      category: new FormControl()
+  });
   }
 
   fetchTransactions(): void {
@@ -58,28 +66,44 @@ export class DashboardComponent implements OnInit {
 
     // Filtrage par catégorie
     this.filteredTransactions = this.transactions.filter(transaction => {
-      if (this.selectedCategory !== null && transaction.product.category !== this.selectedCategory) {
+      
+      // let product = this.fetchProduct(transaction.product);
+      // console.log(this.productsCache[product]);
+      // console.log(transaction.category,this.selectedCategory);
+      // console.log(this.contactForm.get('category'));
+      if (this.selectedCategory == 3) {
+        return true;
+      }
+      if (transaction.category !== this.selectedCategory) {
         return false;
       }
+      console.log(transaction );
+      
+      
+      // if (this.selectedCategory !== null && transaction.category === this.selectedCategory) {
+      //   console.log(transaction);
+      //   return false;
+      // }
 
       // Filtrage par période
-      const transactionDate = new Date(transaction.date);
-      const timeDifference = now.getTime() - transactionDate.getTime();
-      const daysDifference = timeDifference / (1000 * 3600 * 24);
+      // const transactionDate = new Date(transaction.date);
+      // const timeDifference = now.getTime() - transactionDate.getTime();
+      // const daysDifference = timeDifference / (1000 * 3600 * 24);
 
-      if (this.selectedTimePeriod === 'year' && daysDifference > 365) {
-        return false;
-      } else if (this.selectedTimePeriod === 'month' && daysDifference > 30) {
-        return false;
-      } else if (this.selectedTimePeriod === 'week' && daysDifference > 7) {
-        return false;
-      } else if (this.selectedTimePeriod === 'day' && daysDifference > 1) {
-        return false;
-      }
+      // if (this.selectedTimePeriod === 'year' && daysDifference > 365) {
+      //   return false;
+      // } else if (this.selectedTimePeriod === 'month' && daysDifference > 30) {
+      //   return false;
+      // } else if (this.selectedTimePeriod === 'week' && daysDifference > 7) {
+      //   return false;
+      // } else if (this.selectedTimePeriod === 'day' && daysDifference > 1) {
+      //   return false;
+      // }
 
       return true;
     });
-
+    console.log(this.filteredTransactions.length);
+    
     this.calculateMetrics();
   }
 
@@ -90,7 +114,6 @@ export class DashboardComponent implements OnInit {
     this.tax = 0;
     
     this.filteredTransactions.forEach(transaction => {
-      console.log(transaction);
       
       if (transaction.sale_type === 'sale') {
         const revenue = transaction.price * transaction.quantity;
@@ -105,10 +128,22 @@ export class DashboardComponent implements OnInit {
     if (this.margin > 0) {
       this.tax = this.margin * 0.30;  // 30% d'impôt sur les bénéfices
     }
-
     this.checkExceptionalMargin();
   }
 
+  onCategoryChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    // console.log(selectElement);
+    
+    // this.selectedCategory = selectElement.value ? Number(selectElement.value) : null;
+    this.filterTransactions();
+  }
+
+  onTimePeriodChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedTimePeriod = selectElement.value;
+    this.filterTransactions();
+  }
   checkExceptionalMargin(): void {
     if (this.previousMargins.length >= 6) {
       const averagePreviousMargin = this.previousMargins.slice(-6).reduce((sum, margin) => sum + margin, 0) / 6;
@@ -125,17 +160,5 @@ export class DashboardComponent implements OnInit {
       spread: 70,
       origin: { y: 0.6 }
     });
-  }
-
-  onCategoryChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedCategory = selectElement.value ? Number(selectElement.value) : null;
-    this.filterTransactions();
-  }
-
-  onTimePeriodChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedTimePeriod = selectElement.value;
-    this.filterTransactions();
   }
 }

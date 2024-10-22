@@ -22,7 +22,7 @@ export class ProductsTableComponent implements OnInit {
   selectedCategory: number | null = null; // La catégorie sélectionnée
   categories = [
     { id: 0, name: 'Poissons' },
-    { id: 1, name: 'Coquillages' },
+    { id: 1, name: 'Fruits de mer' },
     { id: 2, name: 'Crustacés' }
   ];
   selectedSaleType: string = "purchase"; // La catégorie sélectionnée

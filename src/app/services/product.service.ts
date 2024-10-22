@@ -9,7 +9,7 @@ export interface Transaction {
   price: number;
   date: string;
   sale_type: string;
-  product: { category: number, price: number, sale: boolean }; // assuming 'product' has category and price
+  category: number; // assuming 'product' has category and price
 }
 
 export interface Product {
@@ -17,7 +17,6 @@ export interface Product {
   name: string;
   category: number;
   price: number;
-  discount_price: number;
   unit: string;
   availability: boolean;
   sale: boolean;
@@ -28,6 +27,7 @@ export interface Product {
   quantityChange?: number;
   discountChange?: number;
   selectedSaleType?: number;
+  discount_price: number;
 }
 
 @Injectable({
@@ -93,5 +93,9 @@ export class ProductService {
       catchError(this.handleError)
     );
   }
-
+  getProductById(productId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(this.localUrl+`infoproduct/${productId}/`).pipe(
+      catchError(this.handleError)
+    );
+  }
 }
